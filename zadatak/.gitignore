@@ -1,0 +1,14 @@
+/target/
+*.class
+*.jar
+*.war
+
+.metadata/
+.settings/
+.recommenders/
+.project
+.classpath
+bin/
+
+*.log
+/tmp/

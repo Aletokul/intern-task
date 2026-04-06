@@ -1,0 +1,89 @@
+<div class="hr-dashboard">
+  
+  <header class="top-bar">
+    <div class="title-group">
+      <h1>HR Baza</h1>
+      <p>Upravljanje kandidatima i veštinama</p>
+    </div>
+    <div class="search-group">
+      <input type="text" [(ngModel)]="search.name" placeholder="Pretraži imena..." />
+      <input type="text" [(ngModel)]="search.skill" placeholder="Traži veštinu..." />
+      <button class="btn btn-dark" (click)="handleSearch()">Traži</button>
+      <button class="btn btn-light" (click)="resetSearch()">Reset</button>
+    </div>
+  </header>
+
+  <main class="content-grid">
+    
+    <aside class="forms-sidebar">
+      <div class="card">
+        <h2>{{ editId ? 'Izmeni kandidata' : 'Novi kandidat' }}</h2>
+        <div class="form-inputs">
+          <input type="text" [(ngModel)]="form.name" placeholder="Ime i prezime" />
+          <input type="date" [(ngModel)]="form.birth" />
+          <input type="email" [(ngModel)]="form.mail" placeholder="Email adresa" />
+          <input type="text" [(ngModel)]="form.phoneNumber" placeholder="Broj telefona" />
+          <div class="button-row">
+            <button class="btn btn-primary full-width" (click)="handleSaveCandidate()">Sačuvaj</button>
+            <button class="btn btn-light" *ngIf="editId" (click)="resetForm()">Odustani</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card inline-form">
+        <input type="text" [(ngModel)]="form.skillName" placeholder="Nova veština (npr. Java)" />
+        <button class="btn btn-dark icon-btn" (click)="handleCreateSkill()">+</button>
+      </div>
+    </aside>
+
+    <section class="table-section">
+      <div class="card table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>Kandidat & Veštine</th>
+              <th>Kontakt</th>
+              <th class="align-right">Opcije</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let c of candidates">
+              
+              <td>
+                <div class="candidate-name">{{ c.name }}</div>
+                <div>
+                  <span *ngFor="let s of c.skills">
+                    {{ s.name }}
+                    <button class="remove-btn" (click)="handleRemoveSkillFromCandidate(c.id, s.name)">&times;</button>
+                  </span>
+                </div>
+              </td>
+              
+              <td class="contact-info">
+                <span>{{ c.mail || '-' }}</span><span> | </span>
+                <span>{{ c.phoneNumber || c.phone || '-' }}</span> <span> | </span>
+                <small>{{ formatDate(c.birth) }}</small>
+              </td>
+              
+              <td class="actions align-right">
+                <select class="skill-dropdown" (change)="handleAddSkillToCandidate(c.id, $event)">
+                  <option value="" selected disabled>+ Dodaj veštinu</option>
+                  <option *ngFor="let s of allSkills" [value]="s.name">{{ s.name }}</option>
+                </select>
+                <div class="action-links">
+                  <button class="link-btn text-blue" (click)="populateEditForm(c)">Izmeni</button>
+                  <button class="link-btn text-red" (click)="handleDeleteCandidate(c.id)">Obriši</button>
+                </div>
+              </td>
+              
+            </tr>
+            <tr *ngIf="candidates.length === 0">
+              <td colspan="3" class="empty-state">Tabela je trenutno prazna.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+  </main>
+</div>
